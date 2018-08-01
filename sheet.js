@@ -64,7 +64,7 @@ function onEdit(e) {
       minTimestamp = Math.min(minTimestamp, out[outStartDate].getTime());
     }
   }
-  var minDate = new Date(minTimestamp - 1000*60*60*24);
+  var minDate = new Date(minTimestamp);
 
   output.push(["placeholder",spreadsheet.getName(),minDate,minDate,0,100,null]);
   outputSheet.clear();
