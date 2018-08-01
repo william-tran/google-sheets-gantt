@@ -29,10 +29,19 @@
         });
         wrapper.draw()
       }
+      var sheetTab = null;
+      function openSpreadSheet() {
+        if (!sheetTab) {
+          sheetTab = window.open(window.location.hash.substring(1),window.location.hash.substring(1));
+        } else {
+          sheetTab.focus();
+        }
+      }
     </script>
   </head>
   <body style="font-family: Arial;border: 0 none;">
-    <button value="Refresh" onclick="javascript:drawVisualization()">Refresh</button>
+    <button onclick="javascript:openSpreadSheet()">Open Spreadheet</button>
+    <button onclick="javascript:drawVisualization()">Refresh</button>
     <div id="vis_div"></div>
   </body>
 </html>
