@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current');   // Don't need to specify chart libraries!
+      google.charts.setOnLoadCallback(drawVisualization);
+
+      var sheetUrl = new URL(window.location.hash.substring(1));
+      sheetUrl.searchParams.append("sheet","Output");
+      sheetUrl.searchParams.append("range","A1:G");
+
+
+      function drawVisualization() {
+
+        var wrapper = new google.visualization.ChartWrapper({
+          chartType: 'Gantt',
+          dataSourceUrl: sheetUrl.href,
+          options: {
+            height: 1000,
+            width: 1000,
+            gantt: {
+              defaultStartDateMillis: new Date()
+            }
+          },
+          containerId: 'vis_div'
+        });
+        wrapper.draw()
+      }
+    </script>
+  </head>
+  <body style="font-family: Arial;border: 0 none;">
+    <button value="Refresh" onclick="javascript:drawVisualization()">Refresh</button>
+    <div id="vis_div"></div>
+  </body>
+</html>
