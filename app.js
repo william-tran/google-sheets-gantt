@@ -1,6 +1,6 @@
 var src = new URLSearchParams(window.location.search).get('src');
 while (!src) {
-  src = prompt("Enter the url of the Google Spreadheet containing the Gantt input","");
+  src = prompt("Enter the url of the Google Spreadheet containing the Gantt input. Make sure you have link sharing turned on.","");
   if (src) {
     window.location.search="?src=" + src;
   }
@@ -92,15 +92,15 @@ function render(data) {
       label: "End Date",
       type: "date",
       calc: function(dataTable, row) {
-        return null;
+        return dataTable.getValue(row, 3);
       }
     },
     {
       label: "Duration",
       type: "number",
       calc: function(dataTable, row) {
-        var days = dataTable.getValue(row, 3);
-        var hours = dataTable.getValue(row, 4);
+        var days = dataTable.getValue(row, 4);
+        var hours = dataTable.getValue(row, 5);
         var duration = 0;
         if (days) {
           duration += days * 24 * 60 * 60 * 1000;
@@ -117,7 +117,7 @@ function render(data) {
       label: "Percent Complete",
       type: "number",
       calc: function(dataTable, row) {
-        return dataTable.getValue(row, 5) || 0;
+        return dataTable.getValue(row, 6) || 0;
       }
     },
     {
@@ -125,7 +125,7 @@ function render(data) {
       type: "string",
       calc: function(dataTable, row) {
         var deps = "";
-        for (var col = 6; col < dataTable.getNumberOfColumns(); col++) {
+        for (var col = 7; col < dataTable.getNumberOfColumns(); col++) {
           var dep = dataTable.getValue(row, col)
           if (dep) {
             deps += dep + ",";
