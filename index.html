@@ -4,63 +4,12 @@
     <title>Google Charts Gantt</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-      var src = new URLSearchParams(window.location.search).get('src');
-      while (!src) {
-        src = prompt("Enter the url of the Google Spreadheet containing the Gantt input","");
-        if (src) {
-          window.location.search="?src=" + src;
-        }
-      }
-      google.charts.load('current', {'packages':['gantt']});
-      google.charts.setOnLoadCallback(drawChart);
-
-      // delay by 1 second when switching back to give the sheet a chance to
-      // finish transforming the input
-      window.addEventListener("focus", drawChartWithDelay);
-
-      function drawChartWithDelay() {
-        setTimeout(drawChart, 1000);
-      }
-
-      function drawChart() {
-        var sheetUrl = new URL(src);
-        sheetUrl.searchParams.append("sheet","Output");
-        sheetUrl.searchParams.append("range","A1:G");
-
-        var query = new google.visualization.Query(sheetUrl.href);
-        query.send(handleQueryResponse);
-
-      }
-
-      function handleQueryResponse(response) {
-        var data = response.getDataTable();
-        var title = data.getValue(data.getNumberOfRows()-1,1);
-        document.title = title;
-        var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
-        var options = {
-            height: 1000,
-            width: 1000,
-            gantt: {
-              defaultStartDateMillis: new Date()
-            }
-          }
-        chart.draw(data, options);
-      }
-
-      var sheetTab = null;
-      function openSpreadSheet() {
-        if (!sheetTab || sheetTab.closed) {
-          sheetTab = window.open(src);
-        } else {
-          sheetTab.focus();
-        }
-      }
-    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="app.js"></script>
   </head>
   <body style="font-family: Arial;border: 0 none;">
     <button onclick="javascript:openSpreadSheet()">Open Spreadheet</button>
-    <button onclick="javascript:drawChart()">Refresh</button>
+    <button onclick="javascript:getData()">Refresh</button>
     <div id="chart_div"></div>
   </body>
 </html>
