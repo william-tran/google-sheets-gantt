@@ -44,7 +44,13 @@ function render(data) {
   document.title = title;
   lastRender = new Date();
   var minTimestamp = lastRender.getTime();
+  var resources = {};
   for (var row = 0; row < data.getNumberOfRows(); row++) {
+    var resource = data.getValue(row, 1);
+    if (resource) {
+      resources[resource] = true;
+    }
+
     var startDate = data.getValue(row, 2);
     if (startDate) {
         minTimestamp = Math.min(minTimestamp, startDate.getTime());
@@ -86,15 +92,15 @@ function render(data) {
       label: "End Date",
       type: "date",
       calc: function(dataTable, row) {
-        return dataTable.getValue(row, 3);
+        return null;
       }
     },
     {
       label: "Duration",
       type: "number",
       calc: function(dataTable, row) {
-        var days = dataTable.getValue(row, 4);
-        var hours = dataTable.getValue(row, 5);
+        var days = dataTable.getValue(row, 3);
+        var hours = dataTable.getValue(row, 4);
         var duration = 0;
         if (days) {
           duration += days * 24 * 60 * 60 * 1000;
@@ -111,7 +117,7 @@ function render(data) {
       label: "Percent Complete",
       type: "number",
       calc: function(dataTable, row) {
-        return dataTable.getValue(row, 6);
+        return dataTable.getValue(row, 5) || 0;
       }
     },
     {
@@ -119,7 +125,7 @@ function render(data) {
       type: "string",
       calc: function(dataTable, row) {
         var deps = "";
-        for (var col = 7; col < dataTable.getNumberOfColumns(); col++) {
+        for (var col = 6; col < dataTable.getNumberOfColumns(); col++) {
           var dep = dataTable.getValue(row, col)
           if (dep) {
             deps += dep + ",";
@@ -131,14 +137,17 @@ function render(data) {
   ]);
 
   var dataWithTitle = dataView.toDataTable();
-  dataWithTitle.addRow(["title",title,null,new Date(minTimestamp),new Date(minTimestamp),0,100,null]);
-
+  dataWithTitle.addRow(["title","Title: "+title,null,new Date(minTimestamp-2),null,0,100,null]);
+  for (var resource in resources) {
+    var resourceTitle = "Resource: "+resource;
+    dataWithTitle.addRow([resourceTitle,resourceTitle,resource,new Date(minTimestamp-1),null,0,100,null]);
+  }
   var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
   var options = {
       height: 1000,
       width: 1000,
       gantt: {
-        defaultStartDateMillis: new Date()
+        defaultStartDate: minTimestamp
       }
     }
   chart.draw(dataWithTitle, options);
