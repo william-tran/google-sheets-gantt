@@ -144,8 +144,8 @@ function render(data) {
   }
   var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
   var options = {
-      height: 1000,
-      width: 1000,
+      height: (dataWithTitle.getNumberOfRows()+1)*42,
+      width: window.innerWidth-20,
       gantt: {
         defaultStartDate: minTimestamp
       }
